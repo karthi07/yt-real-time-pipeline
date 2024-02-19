@@ -84,7 +84,8 @@ def main():
     youtube_videos_value_schema = schema_registry_client.get_latest_version("youtube_videos-value")
     kafka_config = config["kafka"] | {
         "key.serializer": StringSerializer(),
-        "value.serializer": AvroSerializer(schema_registry_client, youtube_videos_value_schema.schema)
+        "value.serializer": AvroSerializer(schema_registry_client,
+                                           youtube_videos_value_schema.schema)
     }
     producer = SerializingProducer(kafka_config)
 
@@ -101,7 +102,7 @@ def main():
                     "TITLE": video["snippet"]["title"],
                     "VIEWS": int(video["statistics"].get("viewCount", 0)),
                     "LIKES": int(video["statistics"].get("likeCount", 0)),
-                    "COMMENTS": int(video["statistics"].get("commentCount", 0))                
+                    "COMMENTS": int(video["statistics"].get("commentCount", 0))
                 },
                 on_delivery=ondelivery,
             )
